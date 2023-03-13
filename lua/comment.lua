@@ -9,8 +9,11 @@ local bo = vim.bo
 local languages = {
 	["lua"] = "--",
 	["python"] = "#",
+	["sh"] = "#",
+	["cpp"] = "//",
 	["c"] = "//"
 }
+
 
 local function strip(s)
    return s:match( "^%s*(.-)%s*$" )
@@ -27,6 +30,7 @@ local function isCommented(line, commentSign)
 	return commFlag
 end
 
+
 local function commentMore()
 	local start_line = vim.fn.line("'<")
 	local end_line = vim.fn.line("'>")
@@ -39,32 +43,45 @@ local function commentMore()
 		local line = vim.fn.getline(i)
 		local _, n_spaces = line:gsub("^%s+", "")
 		local spaces = string.rep(" ", n_spaces)
+
 		local sline = strip(line)
 
-		if isCommented(sline, commentSign) == 0 then
-			line = spaces .. sline:sub(#commentSign+2)
+		if commentSign ~= nil then
+			if isCommented(sline, commentSign) then
+				line = sline:sub(#commentSign+2)
+			else
+				line = spaces .. commentSign .. " " .. sline
+			end
 		else
-			line = spaces .. commentSign .. " " .. sline
+			print("Language [" .. filetype ..  "] is not supproted")
 		end
     table.insert(lines, line)
   end
   vim.fn.setline(start_line, lines)
 end
 
+
 local function comment()
+	local filetype = bo.filetype
 
 	local line = a.nvim_get_current_line()
-	local _, n_spaces = line:gsub("^%s+", "")
 	local sline = strip(line)
+	local _, n_spaces = line:gsub("^%s+", "")
 	local spaces = string.rep(" ", n_spaces)
-	local filetype = bo.filetype
 	local commentSign = languages[filetype]
 
-	if isCommented(sline, commentSign) then
-		a.nvim_set_current_line(spaces .. sline:sub(#commentSign+2))
+	if commentSign ~= nil then
+		if isCommented(sline, commentSign) then
+			a.nvim_set_current_line(
+			sline:sub(#commentSign+2))
+		else
+			a.nvim_set_current_line(
+			spaces .. commentSign .. " " .. sline)
+		end
 	else
-		a.nvim_set_current_line(spaces .. commentSign .. " " .. sline)
+		print("Language [" .. filetype ..  "] is not supproted")
 	end
+
 end
 
 
