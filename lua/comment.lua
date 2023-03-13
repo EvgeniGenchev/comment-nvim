@@ -42,13 +42,13 @@ local function commentMore()
 
 		local line = vim.fn.getline(i)
 		local _, n_spaces = line:gsub("^%s+", "")
-		local spaces = string.rep(" ", n_spaces)
+		local spaces = string.rep("\t", n_spaces)
 
 		local sline = strip(line)
 
 		if commentSign ~= nil then
 			if isCommented(sline, commentSign) then
-				line = sline:sub(#commentSign+2)
+				line = spaces .. sline:sub(#commentSign+2)
 			else
 				line = spaces .. commentSign .. " " .. sline
 			end
@@ -67,13 +67,13 @@ local function comment()
 	local line = a.nvim_get_current_line()
 	local sline = strip(line)
 	local _, n_spaces = line:gsub("^%s+", "")
-	local spaces = string.rep(" ", n_spaces)
+	local spaces = string.rep("\t", n_spaces)
 	local commentSign = languages[filetype]
 
 	if commentSign ~= nil then
 		if isCommented(sline, commentSign) then
 			a.nvim_set_current_line(
-			sline:sub(#commentSign+2))
+			spaces .. sline:sub(#commentSign+2))
 		else
 			a.nvim_set_current_line(
 			spaces .. commentSign .. " " .. sline)
