@@ -59,9 +59,11 @@ require('comment').setup({
 })
 ```
 
+## TODO
 
-
-
+- [ ] add support for spaces
+- [ ] add support for ranges in normal mod
+- [ ] add support for multiline comment signes
 
 
 <p align="center">
