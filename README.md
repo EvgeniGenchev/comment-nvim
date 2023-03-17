@@ -4,10 +4,10 @@ a simple lua script to help you comment and uncomment faster
 
 ![comment](https://user-images.githubusercontent.com/59848681/224585993-36bbde7a-c0c8-4b2e-8220-232b4ad26918.gif)
 
-## Fetures
+## Features
 
 - Single line comment/uncomment
-- Visual mode multiline comment/uncomment
+- Visual mode multi-line comment/uncomment
 - Detecting languages and using the correct comment sign
 - Remapable keymap shortcuts available
 
@@ -36,6 +36,9 @@ require('comment').setup()
 
 
 ## Customize
+
+You can change the shortcuts of the commands.
+
 ```lua
 -- Change the default singleline comment
 vim.api.nvim_set_keymap('n', '?', ':Comment<CR>', {noremap=true, silent=false})
@@ -43,6 +46,21 @@ vim.api.nvim_set_keymap('n', '?', ':Comment<CR>', {noremap=true, silent=false})
 -- Change the visual mode multiline comment
 vim.api.nvim_set_keymap('v', '?', ':CommentMore<CR>', {noremap=true, silent=false})
 ```
+
+Also you can add other languages when you require the plug-in in `init.lua`.
+
+```lua
+require('comment').setup({
+	languages = {
+		sh = "#",
+		php = "//",
+		java = "//",
+	},
+})
+```
+
+
+
 
 
 

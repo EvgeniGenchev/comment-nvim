@@ -62,8 +62,8 @@ end
 
 
 local function comment()
-	local filetype = bo.filetype
 
+	local filetype = bo.filetype
 	local line = a.nvim_get_current_line()
 	local sline = strip(line)
 	local _, n_spaces = line:gsub("^%s+", "")
@@ -85,7 +85,22 @@ local function comment()
 end
 
 
-local function setup()
+local function setup(opts)
+
+	if not opts then
+		opts = {}
+	end
+
+	local langs = {}
+
+	if opts.languages then
+		langs = opts.languages
+	end
+
+	for key, value in pairs(langs) do
+		languages[key] = value
+	end
+
 	vim.cmd('command! Comment lua require("comment").comment()')
 	a.nvim_set_keymap('n', '?', ':Comment<CR>', {noremap=true, silent=false})
 
