@@ -30,6 +30,15 @@ local function isCommented(line, commentSign)
 	return commFlag
 end
 
+local function count_tabs(str)
+	local count = 0
+
+	for _ in str:gmatch("\t") do
+		count = count + 1
+	end
+
+	return count
+end
 
 local function commentMore()
 	local start_line = vim.fn.line("'<")
@@ -41,7 +50,7 @@ local function commentMore()
 	for i = start_line, end_line do
 
 		local line = vim.fn.getline(i)
-		local _, n_spaces = line:gsub("^%s+", "")
+		local n_spaces = count_tabs(line)
 		local spaces = string.rep("\t", n_spaces)
 
 		local sline = strip(line)
@@ -66,7 +75,7 @@ local function comment()
 	local filetype = bo.filetype
 	local line = a.nvim_get_current_line()
 	local sline = strip(line)
-	local _, n_spaces = line:gsub("^%s+", "")
+	local n_spaces = count_tabs(line)
 	local spaces = string.rep("\t", n_spaces)
 	local commentSign = languages[filetype]
 
