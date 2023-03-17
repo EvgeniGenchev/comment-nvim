@@ -2,7 +2,7 @@
 
 a simple lua script to help you comment and uncomment faster
 
-![comment](https://user-images.githubusercontent.com/59848681/224585993-36bbde7a-c0c8-4b2e-8220-232b4ad26918.gif)
+![output](https://user-images.githubusercontent.com/59848681/225922533-96f25b78-f564-4324-9474-ab35fe9b4eaf.gif)
 
 ## Features
 
