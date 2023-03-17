@@ -17,4 +17,4 @@ jobs:
           sudo apt-get install luarocks -y
           sudo luarocks install luacheck
       - name: Run Luacheck
-        run: luacheck .
+        run: luacheck --globals vim -- .
