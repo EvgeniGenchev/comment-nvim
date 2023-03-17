@@ -30,14 +30,26 @@ local function isCommented(line, commentSign)
 	return commFlag
 end
 
-local function count_tabs(str)
-	local count = 0
+local function count_indent(str)
+	local count_tab = 0
+	local count_sp = 0
 
-	for _ in str:gmatch("\t") do
-		count = count + 1
+
+	for i = 1, #str do
+		local c = str:sub(i,i)
+
+		if (c ~= "\t") then
+			if (c ~= " ") then
+				break
+			else
+				count_sp = count_sp + 1
+			end
+		else
+			count_tab = count_tab + 1
+		end
 	end
 
-	return count
+	return count_tab, count_sp
 end
 
 local function commentMore()
@@ -50,16 +62,17 @@ local function commentMore()
 	for i = start_line, end_line do
 
 		local line = vim.fn.getline(i)
-		local n_spaces = count_tabs(line)
-		local spaces = string.rep("\t", n_spaces)
+		local n_tabs, n_spaces = count_indent(line)
+		local spaces = string.rep(" ", n_spaces)
+		local tabs = string.rep("\t", n_tabs)
 
 		local sline = strip(line)
 
 		if commentSign ~= nil then
 			if isCommented(sline, commentSign) then
-				line = spaces .. sline:sub(#commentSign+2)
+				line = tabs .. spaces .. sline:sub(#commentSign+2)
 			else
-				line = spaces .. commentSign .. " " .. sline
+				line = tabs .. spaces .. commentSign .. " " .. sline
 			end
 		else
 			print("Language [" .. filetype ..  "] is not supproted")
@@ -75,17 +88,18 @@ local function comment()
 	local filetype = bo.filetype
 	local line = a.nvim_get_current_line()
 	local sline = strip(line)
-	local n_spaces = count_tabs(line)
-	local spaces = string.rep("\t", n_spaces)
+	local n_tabs, n_spaces = count_indent(line)
+	local spaces = string.rep(" ", n_spaces)
+	local tabs = string.rep("\t", n_tabs)
 	local commentSign = languages[filetype]
 
 	if commentSign ~= nil then
 		if isCommented(sline, commentSign) then
 			a.nvim_set_current_line(
-			spaces .. sline:sub(#commentSign+2))
+			tabs .. spaces .. sline:sub(#commentSign+2))
 		else
 			a.nvim_set_current_line(
-			spaces .. commentSign .. " " .. sline)
+			tabs .. spaces .. commentSign .. " " .. sline)
 		end
 	else
 		print("Language [" .. filetype ..  "] is not supproted")
