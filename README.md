@@ -3,68 +3,65 @@
 a simple lua script to help you comment and uncomment faster
 
 ![output](https://user-images.githubusercontent.com/59848681/225922533-96f25b78-f564-4324-9474-ab35fe9b4eaf.gif)
-
 ## Features
-
 - Single line comment/uncomment
 - Visual mode multi-line comment/uncomment
+- True block comment support (e.g. `/* */`, `--[[ ]]`, `""" """`)
+- Automatic selection of block vs line comments based on a configurable line threshold
 - Detecting languages and using the correct comment sign
 - Remapable keymap shortcuts available
 
 ## Setup
-
 - [vim-plug](https://github.com/junegunn/vim-plug)
-
 ```vim
 Plug 'EvgeniGenchev/comment-nvim'
 ```
-
 - [packer.nvim](https://github.com/wbthomason/packer.nvim)
-
 ```lua
 use({
   'EvgeniGenchev/comment-nvim',
 })
 ```
-
 ## Usage
 ```lua
 -- include the package in your init.lua
 require('comment').setup()
 ```
-
-
-
 ## Customize
-
 You can change the shortcuts of the commands.
-
 ```lua
--- Change the default singleline comment
+-- Change the default singleline comment shortcut
 vim.api.nvim_set_keymap('n', '?', ':Comment<CR>', {noremap=true, silent=false})
-
--- Change the visual mode multiline comment
+-- Change the visual mode multiline comment shortcut
 vim.api.nvim_set_keymap('v', '?', ':CommentMore<CR>', {noremap=true, silent=false})
 ```
 
-Also you can add other languages when you require the plug-in in `init.lua`.
+You can add languages or override existing ones in `init.lua`. Each language takes a `{ single, multi }` pair where `single` is the single-line comment prefix and `multi` is a `{ open, close }` pair for block comments. Use `nil` if a style is not supported by the language.
 
 ```lua
 require('comment').setup({
 	languages = {
-		sh = "#",
-		php = "//",
-		java = "//",
+		sh         = { "#",  nil },
+		zsh        = { "#",  nil },
+		php        = { "//", { "/*", "*/" } },
+		java       = { "//", { "/*", "*/" } },
+		css        = { nil,  { "/*", "*/" } },
 	},
 })
 ```
 
+You can also configure the threshold which is the minimum number of selected lines at which block comment syntax is used instead of line-by-line comments. Defaults to `4`.
+
+```lua
+require('comment').setup({
+	threshold = 5,
+})
+```
+
 ## TODO
-
 - [x] add support for spaces
-- [ ] add support for ranges in normal mod
-- [ ] add support for multiline comment signes
-
+- [x] add support for multiline comment signs
+- [ ] per-language threshold configuration
 
 <p align="center">
   Copyright &copy; 2023-present
